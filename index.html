@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sovereign Node — Architecture of Self-Sovereign Life</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Fira+Code:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background-color: #b8c5a8;
+            color: #4a5a4a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Background Grid - barely visible */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(74, 90, 74, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(74, 90, 74, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            opacity: 1;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #b8c5a8;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(74, 90, 74, 0.3);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(74, 90, 74, 0.5);
+        }
+        
+        ::selection {
+            background-color: rgba(74, 90, 74, 0.15);
+            color: #4a5a4a;
+        }
+        
+        /* Navigation */
+        .nav-sidebar {
+            position: fixed;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(74, 90, 74, 0.1);
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-title {
+            font-size: 0.75rem;
+            color: #5a6a5a;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            opacity: 0.7;
+        }
+        
+        .nav-link {
+            display: block;
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.5rem;
+            color: #6a7a6a;
+            text-decoration: none;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(74, 90, 74, 0.08);
+            color: #4a5a4a;
+            opacity: 1;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 3rem 1.5rem;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            filter: saturate(0.5) brightness(0.6);
+        }
+        
+        .hero-orb {
+            position: absolute;
+            width: 32rem;
+            height: 32rem;
+            border-radius: 50%;
+            filter: blur(150px);
+            animation: pulse 10s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .hero-orb-1 {
+            top: 20%;
+            left: 20%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .hero-orb-2 {
+            bottom: 20%;
+            right: 20%;
+            background: rgba(184, 197, 168, 0.4);
+            animation-delay: 3s;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 75rem;
+        }
+        
+        .terminal-header {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem 0.5rem 0 0;
+            border: 1px solid rgba(74, 90, 74, 0.1);
+            border-bottom: 0;
+            padding: 0.75rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0;
+        }
+        
+        .terminal-icon {
+            width: 1rem;
+            height: 1rem;
+            color: #5a6a5a;
+            opacity: 0.6;
+        }
+        
+        .terminal-title {
+            font-size: 0.875rem;
+            color: #5a6a5a;
+            opacity: 0.7;
+        }
+        
+        .hero-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 0 0.5rem 0.5rem 0.5rem;
+            border: 1px solid rgba(74, 90, 74, 0.1);
+            padding: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            display: inline-block;
+            width: 100%;
+            max-width: 75rem;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            font-size: 0.875rem;
+            color: #5a6a5a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            opacity: 0.7;
+        }
+        
+        .hero-h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-h1-main {
+            color: #4a5a4a;
+        }
+        
+        .hero-h1-accent {
+            color: #5a6a5a;
+            text-shadow: none;
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            color: #6b8e6b;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-text {
+            max-width: 48rem;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .hero-text-box {
+            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(74, 90, 74, 0.08);
+            text-align: left;
+        }
+        
+        .hero-text-box p {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            color: #4a5a4a;
+            line-height: 1.8;
+        }
+        
+        .hero-text-box strong {
+            color: #5a6a5a;
+            font-weight: 600;
+        }
+        
+        .hero-text-box em {
+            color: #5a6a5a;
+            font-style: italic;
+        }
+        
+        .comment-green {
+            color: #5a6a5a;
+        }
+        
+        .comment-cyan {
+            color: #5a6a5a;
+        }
+        
+        .hero-arrow {
+            margin-top: 3rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chevron {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #5a6a5a;
+            margin: 0 auto;
+        }
+        
+        /* Framework Section */
+        .framework-section {
+            padding: 6rem 1.5rem;
+            position: relative;
+        }
+        
+        .framework-terminal {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(74, 90, 74, 0.1);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        
+        .framework-dots {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: rgba(200, 180, 160, 0.5); }
+        .dot-yellow { background: rgba(210, 200, 170, 0.5); }
+        .dot-green { background: rgba(140, 160, 140, 0.5); }
+        
+        .framework-path {
+            font-size: 0.875rem;
+            color: #5a6a5a;
+            margin-bottom: 1.5rem;
+        }
+        
+        .framework-h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+        
+        .framework-p {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            color: #6a7a6a;
+            max-width: 48rem;
+            padding-left: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .keyword {
+            color: #5a6a5a;
+        }
+        
+        .classname {
+            color: #4a5a4a;
+        }
+        
+        .comment {
+            color: #5a6a5a;
+        }
+        
+        .brace {
+            color: #4a5a4a;
+        }
+        
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .layer-card {
+            position: relative;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(74, 90, 74, 0.1);
+            padding: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .layer-card:hover {
+            border-color: rgba(122, 154, 122, 0.4);
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-0.5rem);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .card-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .card-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        
+        .layer-card:hover .card-icon {
+            opacity: 1;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 4.5rem;
+            font-weight: 600;
+            opacity: 0.05;
+            transition: opacity 0.3s;
+        }
+        
+        .layer-card:hover .card-number {
+            opacity: 0.1;
+        }
+        
+        .card-h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #4a5a4a;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .layer-card:hover .card-h3 {
+            color: #5a6a5a;
+        }
+        
+        .card-p {
+            font-size: 0.875rem;
+            color: #6a7a6a;
+            line-height: 1.6;
+        }
+        
+        .card-divider {
+            height: 0.125rem;
+            margin-top: 1rem;
+            border-radius: 9999px;
+            background: linear-gradient(to right, transparent, currentColor, transparent);
+            opacity: 0.3;
+        }
+        
+        /* Layer Sections */
+        .layer-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 5rem 1.5rem;
+            position: relative;
+        }
+        
+        .layer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+            width: 100%;
+        }
+        
+        @media (min-width: 1024px) {
+            .layer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .layer-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .layer-image-wrapper {
+                height: 500px;
+            }
+        }
+        
+        .layer-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.5) brightness(0.75);
+            transition: transform 0.7s ease;
+        }
+        
+        .layer-image-wrapper:hover .layer-image {
+            transform: scale(1.05);
+        }
+        
+        .layer-image-overlay {
+            position: absolute;
+            inset: 0;
+            backdrop-filter: blur(2px);
+            background: linear-gradient(to top, #0a0e0a, transparent, transparent);
+        }
+        
+        .layer-image-border {
+            position: absolute;
+            inset: 0;
+            border-radius: 0.5rem;
+            border: 2px solid transparent;
+            transition: all 0.5s ease;
+        }
+        
+        .layer-image-wrapper:hover .layer-image-border {
+            border-color: currentColor;
+        }
+        
+        .layer-image-label {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 31, 15, 0.8);
+            border-radius: 0.25rem;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: 0.75rem;
+        }
+        
+        .layer-image-label-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .layer-content-card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem;
+            border: 1px solid;
+            padding: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        
+        .layer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid;
+            margin-bottom: 1.5rem;
+        }
+        
+        .layer-badge-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .layer-badge-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .layer-h2 {
+            font-size: clamp(1.875rem, 4vw, 2.5rem);
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: #4a5a4a;
+        }
+        
+        .layer-h3 {
+            font-size: clamp(1.25rem, 3vw, 1.875rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+        
+        .layer-description-box {
+            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            border: 1px solid rgba(74, 90, 74, 0.08);
+        }
+        
+        .layer-description {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #4a5a4a;
+            line-height: 1.8;
+        }
+        
+        .layer-divider {
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .layer-divider-line {
+            height: 0.125rem;
+            flex: 1;
+            border-radius: 9999px;
+            background: linear-gradient(to right, currentColor, transparent);
+        }
+        
+        .layer-divider-text {
+            font-size: 0.75rem;
+            opacity: 0.5;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 5rem 1.5rem;
+            position: relative;
+        }
+        
+        .footer-container {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+        
+        .footer-quote-card {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(74, 90, 74, 0.1);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        
+        .footer-quote-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-quote-icon {
+            width: 1rem;
+            height: 1rem;
+            color: #5a6a5a;
+        }
+        
+        .footer-quote-path {
+            font-size: 0.875rem;
+            color: #5a6a5a;
+        }
+        
+        .footer-quote {
+            font-size: clamp(1.25rem, 3vw, 1.875rem);
+            text-align: center;
+            line-height: 1.6;
+            color: #6a7a6a;
+        }
+        
+        .footer-quote-text {
+            color: #5a6a5a;
+        }
+        
+        .footer-cta-card {
+            backdrop-filter: blur(20px);
+            background: rgba(15, 31, 15, 0.6);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            padding: 2rem;
+            box-shadow: 0 0 60px rgba(34, 211, 238, 0.15);
+        }
+        
+        .footer-cta-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-cta-icon {
+            width: 1rem;
+            height: 1rem;
+            color: #5a6a5a;
+        }
+        
+        .footer-cta-path {
+            font-size: 0.875rem;
+            color: #5a6a5a;
+        }
+        
+        .footer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .footer-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, rgba(90, 106, 90, 0.2), rgba(90, 106, 90, 0.3)); border: 1px solid rgba(74, 90, 74, 0.2);
+            color: #4a5a4a;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .footer-button:hover {
+            box-shadow: 0 8px 24px rgba(122, 154, 122, 0.3);
+            transform: scale(1.02);
+            background: linear-gradient(to right, #8fac8f, #a4bfa4);
+        }
+        
+        .footer-button:active {
+            transform: scale(0.98);
+        }
+        
+        .footer-button-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .footer-text {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6a7a6a;
+        }
+        
+        .footer-accent {
+            color: #5a6a5a;
+        }
+        
+        /* Fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Mobile Navigation */
+        @media (max-width: 1023px) {
+            .nav-sidebar {
+                display: none;
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .framework-terminal {
+                padding: 1.5rem;
+            }
+            
+            .layer-section {
+                padding: 3rem 1.5rem;
+            }
+        }
+        
+        /* SVG Icons */
+        .icon {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-sidebar">
+        <div class="nav-title">~/layers</div>
+        <a href="#layer-1" class="nav-link" data-layer="1">[LAYER_01]</a>
+        <a href="#layer-2" class="nav-link" data-layer="2">[LAYER_02]</a>
+        <a href="#layer-3" class="nav-link" data-layer="3">[LAYER_03]</a>
+        <a href="#layer-4" class="nav-link" data-layer="4">[LAYER_04]</a>
+        <a href="#layer-5" class="nav-link" data-layer="5">[LAYER_05]</a>
+        <a href="#layer-6" class="nav-link" data-layer="6">[LAYER_06]</a>
+        <a href="#layer-7" class="nav-link" data-layer="7">[LAYER_07]</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        
+        <div class="hero-content">
+            <div class="terminal-header">
+                <svg class="terminal-icon icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+                <span class="terminal-title">sovereign_node.sh</span>
+            </div>
+            
+            <div class="hero-card">
+                <div class="hero-badge">
+                    <svg class="icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    SYSTEM.INIT
+                </div>
+                
+                <h1 class="hero-h1">
+                    <span class="hero-h1-main">$ ./architecture_of_</span><br>
+                    <span class="hero-h1-accent">self_sovereign_life</span>
+                </h1>
+                
+                <p class="hero-subtitle">
+                    &gt; From negotiated_dependency to techno_ecological_node
+                </p>
+                
+                <div class="hero-text">
+                    <div class="hero-text-box">
+                        <p>
+                            <span class="comment-green">/*</span> The modern human has become a <strong>consumer</strong> of 
+                            optimized experiences—a passive node in someone else's network. 
+                            But sovereignty is not granted; it is <em>architected</em>. <span class="comment-green">*/</span>
+                        </p>
+                    </div>
+                    
+                    <div class="hero-text-box">
+                        <p>
+                            <span class="comment-cyan">//</span> This is the shift from <strong>negotiated_dependency</strong> to 
+                            <strong>radiant_autonomy</strong>. The human as <em>conductor</em>, 
+                            not component. The curator of complexity, not its casualty.
+                        </p>
+                    </div>
+                </div>
+                
+                <a href="#framework" class="hero-arrow" style="display: block; text-decoration: none;">
+                    <svg class="chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Framework Section -->
+    <section class="framework-section" id="framework">
+        <div class="container">
+            <div class="framework-terminal fade-in">
+                <div class="framework-dots">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div class="framework-path">~/seven_layers_of_sovereignty</div>
+                
+                <h2 class="framework-h2">
+                    <span class="keyword">class</span> <span class="classname">SevenLayers</span> <span class="brace">{</span>
+                </h2>
+                <p class="framework-p">
+                    <span class="comment">/* These are not isolated features but a <strong>stacked_metabolism</strong>—
+                    a living architecture where each layer feeds the next. When all seven align, 
+                    the Node achieves what we call <em>radiant_autonomy</em>. */</span>
+                </p>
+                <div class="framework-h2 brace">}</div>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #5a6a5a;">[LAYER_01]</span>
+                        <svg class="card-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C10.3431 2 9 3.34315 9 5C9 6.30622 9.83481 7.41746 11 7.82929V9.17071C9.83481 9.58254 9 10.6938 9 12C9 13.3062 9.83481 14.4175 11 14.8293V16.1707C9.83481 16.5825 9 17.6938 9 19C9 20.6569 10.3431 22 12 22C13.6569 22 15 20.6569 15 19C15 17.6938 14.1652 16.5825 13 16.1707V14.8293C14.1652 14.4175 15 13.3062 15 12C15 10.6938 14.1652 9.58254 13 9.17071V7.82929C14.1652 7.41746 15 6.30622 15 5C15 3.34315 13.6569 2 12 2Z"></path>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #5a6a5a;">01</div>
+                    <h3 class="card-h3">metabolic_layer</h3>
+                    <p class="card-p">// Energy as the First Protocol</p>
+                    <div class="card-divider" style="color: #5a6a5a;"></div>
+                </div>
+                
+                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #5a6a5a;">[LAYER_02]</span>
+                        <svg class="card-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #5a6a5a;">02</div>
+                    <h3 class="card-h3">biological_layer</h3>
+                    <p class="card-p">// The Body as Infrastructure</p>
+                    <div class="card-divider" style="color: #5a6a5a;"></div>
+                </div>
+                
+                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #8b9d8b;">[LAYER_03]</span>
+                        <svg class="card-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v15A2.5 2.5 0 0 0 9.5 22h5a2.5 2.5 0 0 0 2.5-2.5v-15A2.5 2.5 0 0 0 14.5 2h-5z"></path>
+                            <path d="M12 18h.01"></path>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #8b9d8b;">03</div>
+                    <h3 class="card-h3">cognitive_layer</h3>
+                    <p class="card-p">// Compute at the Edge</p>
+                    <div class="card-divider" style="color: #8b9d8b;"></div>
+                </div>
+                
+                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(120, 110, 90, 0.06);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #a08c64;">[LAYER_04]</span>
+                        <svg class="card-icon icon" style="color: #a08c64;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #a08c64;">04</div>
+                    <h3 class="card-h3">filtering_layer</h3>
+                    <p class="card-p">// Signal Processing in the Information Age</p>
+                    <div class="card-divider" style="color: #a08c64;"></div>
+                </div>
+                
+                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #8b9d8b;">[LAYER_05]</span>
+                        <svg class="card-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                            <line x1="4" y1="12" x2="2" y2="12"></line>
+                            <line x1="22" y1="12" x2="20" y2="12"></line>
+                            <line x1="16" y1="6" x2="18.36" y2="3.64"></line>
+                            <line x1="8" y1="18" x2="5.64" y2="20.36"></line>
+                            <line x1="8" y1="6" x2="5.64" y2="3.64"></line>
+                            <line x1="16" y1="18" x2="18.36" y2="20.36"></line>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #8b9d8b;">05</div>
+                    <h3 class="card-h3">integration_layer</h3>
+                    <p class="card-p">// Systems Thinking as Practice</p>
+                    <div class="card-divider" style="color: #8b9d8b;"></div>
+                </div>
+                
+                <div class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #5a6a5a;">[LAYER_06]</span>
+                        <svg class="card-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 20h18"></path>
+                            <path d="M21 10s-2-6-9-6-9 6-9 6"></path>
+                            <path d="M12 4v6"></path>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #5a6a5a;">06</div>
+                    <h3 class="card-h3">foundation_layer</h3>
+                    <p class="card-p">// Land as the Original Ledger</p>
+                    <div class="card-divider" style="color: #5a6a5a;"></div>
+                </div>
+                
+                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                    <div class="card-header">
+                        <span class="card-tag" style="color: #6a7a6a;">[LAYER_07]</span>
+                        <svg class="card-icon icon" style="color: #6a7a6a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <circle cx="6" cy="6" r="2"></circle>
+                            <circle cx="6" cy="18" r="2"></circle>
+                            <circle cx="18" cy="6" r="2"></circle>
+                            <circle cx="18" cy="18" r="2"></circle>
+                            <line x1="13.5" y1="10.5" x2="16.5" y2="7.5"></line>
+                            <line x1="13.5" y1="13.5" x2="16.5" y2="16.5"></line>
+                            <line x1="10.5" y1="10.5" x2="7.5" y2="7.5"></line>
+                            <line x1="10.5" y1="13.5" x2="7.5" y2="16.5"></line>
+                        </svg>
+                    </div>
+                    <div class="card-number" style="color: #6a7a6a;">07</div>
+                    <h3 class="card-h3">coordination_layer</h3>
+                    <p class="card-p">// Protocol as Philosophy</p>
+                    <div class="card-divider" style="color: #6a7a6a;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 1 -->
+    <section class="layer-section fade-in" id="layer-1">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80" alt="Energy as the First Protocol" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 4px 20px rgba(122, 154, 122, 0.15);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #5a6a5a;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_01]_VISUAL
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
+                    <div class="layer-badge" style="background: rgba(74, 222, 128, 0.1); border-color: rgba(90, 106, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C10.3431 2 9 3.34315 9 5C9 6.30622 9.83481 7.41746 11 7.82929V9.17071C9.83481 9.58254 9 10.6938 9 12C9 13.3062 9.83481 14.4175 11 14.8293V16.1707C9.83481 16.5825 9 17.6938 9 19C9 20.6569 10.3431 22 12 22C13.6569 22 15 20.6569 15 19C15 17.6938 14.1652 16.5825 13 16.1707V14.8293C14.1652 14.4175 15 13.3062 15 12C15 10.6938 14.1652 9.58254 13 9.17071V7.82929C14.1652 7.41746 15 6.30622 15 5C15 3.34315 13.6569 2 12 2Z"></path>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #5a6a5a;">[LAYER_01]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">metabolic_layer</h2>
+                    <h3 class="layer-h3" style="color: #5a6a5a;">// Energy as the First Protocol</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            Sovereignty begins with metabolic autonomy. The body that can generate, store, and distribute its own energy is the first decentralized node. From photosynthesis to mitochondrial efficiency, this is the biological proof-of-work.
+                        </p>
+                        <p class="layer-description" style="color: #5a6a5a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Energy generation and storage as fundamental autonomy</li>
+                            <li>Mitochondrial health as the cellular power grid</li>
+                            <li>Metabolic flexibility: fat adaptation and glucose control</li>
+                            <li>Circadian alignment for hormonal optimization</li>
+                            <li>The body as a self-sustaining energetic system</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #5a6a5a;"></div>
+                        <span class="layer-divider-text" style="color: #5a6a5a;">LAYER_01_END</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 2 -->
+    <section class="layer-section fade-in" id="layer-2">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12); order: 2;" class="lg:order-1">
+                    <div class="layer-badge" style="background: rgba(34, 211, 238, 0.1); border-color: rgba(90, 106, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #5a6a5a;">[LAYER_02]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">biological_layer</h2>
+                    <h3 class="layer-h3" style="color: #5a6a5a;">// The Body as Infrastructure</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            Health is not a service to be consumed but a system to be maintained. This layer encompasses regenerative nutrition, movement protocols, and the microbiome as the original distributed network—a trillion entities working without central command.
+                        </p>
+                        <p class="layer-description" style="color: #5a6a5a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Regenerative nutrition: food as biological information</li>
+                            <li>Movement as mechanical signal for adaptation</li>
+                            <li>The microbiome as distributed intelligence</li>
+                            <li>Sleep architecture as the system maintenance window</li>
+                            <li>Hormesis: controlled stress for anti-fragility</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #5a6a5a;"></div>
+                        <span class="layer-divider-text" style="color: #5a6a5a;">LAYER_02_END</span>
+                    </div>
+                </div>
+                
+                <div class="layer-image-wrapper" style="order: 1;" class="lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200&q=80" alt="The Body as Infrastructure" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #5a6a5a;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_02]_VISUAL
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 3 -->
+    <section class="layer-section fade-in" id="layer-3">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1200&q=80" alt="Compute at the Edge" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #8b9d8b;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_03]_VISUAL
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
+                    <div class="layer-badge" style="background: rgba(167, 139, 250, 0.1); border-color: rgba(90, 106, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v15A2.5 2.5 0 0 0 9.5 22h5a2.5 2.5 0 0 0 2.5-2.5v-15A2.5 2.5 0 0 0 14.5 2h-5z"></path>
+                            <path d="M12 18h.01"></path>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #8b9d8b;">[LAYER_03]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">cognitive_layer</h2>
+                    <h3 class="layer-h3" style="color: #8b9d8b;">// Compute at the Edge</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            The mind is the most sophisticated processor ever created. This layer trains attention, develops mental models, and builds pattern-recognition systems that operate independently of algorithmic suggestion. Thinking is the ultimate edge compute.
+                        </p>
+                        <p class="layer-description" style="color: #8b9d8b; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Attention as the scarcest resource in the information age</li>
+                            <li>Mental models: frameworks for navigating complexity</li>
+                            <li>Metacognition: thinking about thinking</li>
+                            <li>Deep work protocols for sustained focus</li>
+                            <li>Neuroplasticity as cognitive sovereignty</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #8b9d8b;"></div>
+                        <span class="layer-divider-text" style="color: #8b9d8b;">LAYER_03_END</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 4 -->
+    <section class="layer-section fade-in" id="layer-4">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-content-card" style="border-color: rgba(120, 110, 90, 0.12); order: 2;" class="lg:order-1">
+                    <div class="layer-badge" style="background: rgba(251, 146, 60, 0.1); border-color: rgba(120, 110, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #a08c64;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #a08c64;">[LAYER_04]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">filtering_layer</h2>
+                    <h3 class="layer-h3" style="color: #a08c64;">// Signal Processing in the Information Age</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            In an attention economy, the sovereign node curates its inputs with precision. This layer develops frameworks for information hygiene, noise reduction, and deliberate exposure. What enters the system determines what the system becomes.
+                        </p>
+                        <p class="layer-description" style="color: #a08c64; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Information diet: curating signal from noise</li>
+                            <li>Digital minimalism and intentional consumption</li>
+                            <li>Source quality over content quantity</li>
+                            <li>Time-boxing and attention boundaries</li>
+                            <li>Building filters before building feeds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #a08c64;"></div>
+                        <span class="layer-divider-text" style="color: #a08c64;">LAYER_04_END</span>
+                    </div>
+                </div>
+                
+                <div class="layer-image-wrapper" style="order: 1;" class="lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80" alt="Signal Processing" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(120, 110, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #a08c64;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_04]_VISUAL
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 5 -->
+    <section class="layer-section fade-in" id="layer-5">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80" alt="Systems Thinking" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #8b9d8b;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_05]_VISUAL
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
+                    <div class="layer-badge" style="background: rgba(244, 114, 182, 0.1); border-color: rgba(90, 106, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <line x1="12" y1="18" x2="12" y2="22"></line>
+                            <line x1="12" y1="2" x2="12" y2="6"></line>
+                            <line x1="4" y1="12" x2="2" y2="12"></line>
+                            <line x1="22" y1="12" x2="20" y2="12"></line>
+                            <line x1="16" y1="6" x2="18.36" y2="3.64"></line>
+                            <line x1="8" y1="18" x2="5.64" y2="20.36"></line>
+                            <line x1="8" y1="6" x2="5.64" y2="3.64"></line>
+                            <line x1="16" y1="18" x2="18.36" y2="20.36"></line>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #8b9d8b;">[LAYER_05]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">integration_layer</h2>
+                    <h3 class="layer-h3" style="color: #8b9d8b;">// Systems Thinking as Practice</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            True sovereignty emerges when all layers operate in concert. This is the practice of seeing patterns across domains, recognizing feedback loops, and orchestrating complexity. The conductor moment—where the human synthesizes rather than consumes.
+                        </p>
+                        <p class="layer-description" style="color: #8b9d8b; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Systems thinking: understanding interconnection</li>
+                            <li>Feedback loops and second-order effects</li>
+                            <li>Cross-domain pattern recognition</li>
+                            <li>Synthesis over analysis: integration as mastery</li>
+                            <li>Emergence: the whole exceeding its parts</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #8b9d8b;"></div>
+                        <span class="layer-divider-text" style="color: #8b9d8b;">LAYER_05_END</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 6 -->
+    <section class="layer-section fade-in" id="layer-6">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12); order: 2;" class="lg:order-1">
+                    <div class="layer-badge" style="background: rgba(132, 204, 22, 0.1); border-color: rgba(90, 106, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 20h18"></path>
+                            <path d="M21 10s-2-6-9-6-9 6-9 6"></path>
+                            <path d="M12 4v6"></path>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #5a6a5a;">[LAYER_06]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">foundation_layer</h2>
+                    <h3 class="layer-h3" style="color: #5a6a5a;">// Land as the Original Ledger</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            All digital sovereignty must be grounded in the physical. This layer reconnects the node to soil, water, and ecosystem. The land is the immutable ledger—no fork, no rollback, only the patient accumulation of biomass and time.
+                        </p>
+                        <p class="layer-description" style="color: #5a6a5a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Land stewardship as long-term sovereignty</li>
+                            <li>Regenerative agriculture and soil health</li>
+                            <li>Water systems and hydrological cycles</li>
+                            <li>Ecosystem integration over extraction</li>
+                            <li>Bioregionalism: understanding place-based context</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #5a6a5a;"></div>
+                        <span class="layer-divider-text" style="color: #5a6a5a;">LAYER_06_END</span>
+                    </div>
+                </div>
+                
+                <div class="layer-image-wrapper" style="order: 1;" class="lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=80" alt="Land as Ledger" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 4px 20px rgba(122, 154, 122, 0.15);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #5a6a5a;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_06]_VISUAL
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 7 -->
+    <section class="layer-section fade-in" id="layer-7">
+        <div class="container">
+            <div class="layer-grid">
+                <div class="layer-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=1200&q=80" alt="Protocol as Philosophy" class="layer-image">
+                    <div class="layer-image-overlay"></div>
+                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-label">
+                        <div class="layer-image-label-text" style="color: #6a7a6a;">
+                            <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            [LAYER_07]_VISUAL
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
+                    <div class="layer-badge" style="background: rgba(6, 182, 212, 0.1); border-color: rgba(90, 106, 90, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #6a7a6a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <circle cx="6" cy="6" r="2"></circle>
+                            <circle cx="6" cy="18" r="2"></circle>
+                            <circle cx="18" cy="6" r="2"></circle>
+                            <circle cx="18" cy="18" r="2"></circle>
+                            <line x1="13.5" y1="10.5" x2="16.5" y2="7.5"></line>
+                            <line x1="13.5" y1="13.5" x2="16.5" y2="16.5"></line>
+                            <line x1="10.5" y1="10.5" x2="7.5" y2="7.5"></line>
+                            <line x1="10.5" y1="13.5" x2="7.5" y2="16.5"></line>
+                        </svg>
+                        <span class="layer-badge-text" style="color: #6a7a6a;">[LAYER_07]</span>
+                    </div>
+                    
+                    <h2 class="layer-h2">coordination_layer</h2>
+                    <h3 class="layer-h3" style="color: #6a7a6a;">// Protocol as Philosophy</h3>
+                    
+                    <div class="layer-description-box">
+                        <p class="layer-description" style="margin-bottom: 1.5rem;">
+                            The final layer establishes how sovereign nodes communicate, transact, and collaborate. Not through coercion or dependency, but through voluntary protocol. This is the architecture of a networked sovereignty—independent yet interconnected.
+                        </p>
+                        <p class="layer-description" style="color: #6a7a6a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
+                            <li>Voluntary coordination over hierarchical control</li>
+                            <li>Protocol design: rules without rulers</li>
+                            <li>Cryptographic trust and reputation systems</li>
+                            <li>Network effects without platform capture</li>
+                            <li>Collaboration as emergent order, not imposed structure</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="layer-divider">
+                        <div class="layer-divider-line" style="color: #6a7a6a;"></div>
+                        <span class="layer-divider-text" style="color: #6a7a6a;">LAYER_07_END</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Author Section -->
+    <section class="framework-section" style="padding-top: 3rem; padding-bottom: 3rem;">
+        <div class="container">
+            <div class="framework-terminal fade-in" style="text-align: center;">
+                <div class="framework-dots">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div class="framework-path">~/author_info.txt</div>
+                
+                <h2 class="framework-h2" style="font-size: clamp(1.875rem, 4vw, 2.5rem); margin-bottom: 1rem;">
+                    <span class="keyword">connect_with</span> <span class="classname">the_author</span>
+                </h2>
+                
+                <p class="framework-p" style="max-width: 42rem; margin: 0 auto 2rem; padding-left: 0;">
+                    <span class="comment">// These frameworks are living documents, evolving through dialogue and practice. 
+                    Join the conversation about building sovereign systems in the digital age.</span>
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 32rem; margin: 0 auto 2rem;">
+                    <a href="https://x.com/yourusername" target="_blank" rel="noopener noreferrer" 
+                       class="footer-button" style="display: inline-flex; text-decoration: none;">
+                        <svg class="footer-button-icon icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                        </svg>
+                        FOLLOW_ON_X
+                    </a>
+                    
+                    <a href="https://yoursubstack.substack.com" target="_blank" rel="noopener noreferrer" 
+                       class="footer-button" style="display: flex; text-decoration: none; background: linear-gradient(to right, rgba(90, 106, 90, 0.2), rgba(90, 106, 90, 0.3)); border: 1px solid rgba(74, 90, 74, 0.2);">
+                        <svg class="footer-button-icon icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        SUBSCRIBE_ON_SUBSTACK
+                    </a>
+                    
+                    <a href="/path/to/sovereign-node-manifest.pdf" download 
+                       class="footer-button" style="display: flex; text-decoration: none; background: linear-gradient(to right, rgba(90, 106, 90, 0.2), rgba(90, 106, 90, 0.3)); border: 1px solid rgba(74, 90, 74, 0.2);">
+                        <svg class="footer-button-icon icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <polyline points="9 15 12 18 15 15"></polyline>
+                        </svg>
+                        DOWNLOAD_MANIFEST_PDF
+                    </a>
+                </div>
+                
+                <p style="margin-top: 1.5rem; font-size: 0.875rem; color: #6b8e6b;">
+                    <span class="comment">// @yourusername — Building tools for techno-ecological sovereignty</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-quote-card fade-in">
+                <div class="footer-quote-header">
+                    <svg class="footer-quote-icon icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <span class="footer-quote-path">~/mandate.txt</span>
+                </div>
+                
+                <div class="footer-quote">
+                    <p><span class="footer-quote-text">"</span>The land is the original ledger;</p>
+                    <p>the human spirit is the primary stakeholder.<span class="footer-quote-text">"</span></p>
+                </div>
+            </div>
+            
+            <div class="footer-text">
+                <p>
+                    <span class="footer-accent">$</span> THE_SOVEREIGN_NODE © 2026
+                    <span class="footer-accent"> | </span>
+                    A_PROTOCOL_FOR_RADIANT_AUTONOMY
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fade-in on scroll animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Active navigation highlighting
+        const sections = document.querySelectorAll('.layer-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 300) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
