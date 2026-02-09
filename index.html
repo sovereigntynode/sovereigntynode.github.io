@@ -20,7 +20,8 @@
         
         body {
             font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            background-color: #b8c5a8;
+            background: linear-gradient(180deg, #b8c5a8 0%, #c5d2b8 50%, #b8c5a8 100%);
+            background-attachment: fixed;
             color: #4a5a4a;
             overflow-x: hidden;
             line-height: 1.6;
@@ -46,7 +47,7 @@
         }
         
         ::-webkit-scrollbar-track {
-            background: #b8c5a8;
+            background: linear-gradient(180deg, #b8c5a8 0%, #c5d2b8 50%, #b8c5a8 100%);
         }
         
         ::-webkit-scrollbar-thumb {
@@ -390,10 +391,14 @@
         }
         
         .layer-card:hover {
-            border-color: rgba(122, 154, 122, 0.4);
-            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(90, 106, 90, 0.3);
+            background: rgba(255, 255, 255, 0.7);
             transform: translateY(-0.5rem);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+        
+        .layer-card:active {
+            transform: translateY(-0.25rem);
         }
         
         .card-header {
@@ -759,6 +764,38 @@
             transform: translateY(0);
         }
         
+        /* Section Divider */
+        .section-divider {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            opacity: 0.4;
+        }
+        
+        .section-divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, currentColor, transparent);
+        }
+        
+        .section-divider-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #5a6a5a;
+        }
+        
+        .section-divider-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        
         /* Mobile Navigation */
         @media (max-width: 1023px) {
             .nav-sidebar {
@@ -862,6 +899,18 @@
         </div>
     </section>
 
+    <!-- Major Section Divider -->
+    <div class="section-divider fade-in" style="color: #5a6a5a; padding: 5rem 0;">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Framework Section -->
     <section class="framework-section" id="framework">
         <div class="container">
@@ -885,65 +934,65 @@
             </div>
             
             <div class="cards-grid">
-                <div class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);">
+                <a href="#layer-1" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #5a6a5a;">[LAYER_01]</span>
-                        <svg class="card-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #7a9870;">[LAYER_01]</span>
+                        <svg class="card-icon icon" style="color: #7a9870;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C10.3431 2 9 3.34315 9 5C9 6.30622 9.83481 7.41746 11 7.82929V9.17071C9.83481 9.58254 9 10.6938 9 12C9 13.3062 9.83481 14.4175 11 14.8293V16.1707C9.83481 16.5825 9 17.6938 9 19C9 20.6569 10.3431 22 12 22C13.6569 22 15 20.6569 15 19C15 17.6938 14.1652 16.5825 13 16.1707V14.8293C14.1652 14.4175 15 13.3062 15 12C15 10.6938 14.1652 9.58254 13 9.17071V7.82929C14.1652 7.41746 15 6.30622 15 5C15 3.34315 13.6569 2 12 2Z"></path>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #5a6a5a;">01</div>
+                    <div class="card-number" style="color: #7a9870;">01</div>
                     <h3 class="card-h3">metabolic_layer</h3>
                     <p class="card-p">// Energy as the First Protocol</p>
-                    <div class="card-divider" style="color: #5a6a5a;"></div>
-                </div>
+                    <div class="card-divider" style="color: #7a9870;"></div>
+                </a>
                 
-                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                <a href="#layer-2" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #5a6a5a;">[LAYER_02]</span>
-                        <svg class="card-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #8b9d7a;">[LAYER_02]</span>
+                        <svg class="card-icon icon" style="color: #8b9d7a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
                             <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
                             <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #5a6a5a;">02</div>
+                    <div class="card-number" style="color: #8b9d7a;">02</div>
                     <h3 class="card-h3">biological_layer</h3>
                     <p class="card-p">// The Body as Infrastructure</p>
-                    <div class="card-divider" style="color: #5a6a5a;"></div>
-                </div>
+                    <div class="card-divider" style="color: #8b9d7a;"></div>
+                </a>
                 
-                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                <a href="#layer-3" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #8b9d8b;">[LAYER_03]</span>
-                        <svg class="card-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #7a8b8b;">[LAYER_03]</span>
+                        <svg class="card-icon icon" style="color: #7a8b8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v15A2.5 2.5 0 0 0 9.5 22h5a2.5 2.5 0 0 0 2.5-2.5v-15A2.5 2.5 0 0 0 14.5 2h-5z"></path>
                             <path d="M12 18h.01"></path>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #8b9d8b;">03</div>
+                    <div class="card-number" style="color: #7a8b8b;">03</div>
                     <h3 class="card-h3">cognitive_layer</h3>
                     <p class="card-p">// Compute at the Edge</p>
-                    <div class="card-divider" style="color: #8b9d8b;"></div>
-                </div>
+                    <div class="card-divider" style="color: #7a8b8b;"></div>
+                </a>
                 
-                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(120, 110, 90, 0.06);">
+                <a href="#layer-4" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #a08c64;">[LAYER_04]</span>
-                        <svg class="card-icon icon" style="color: #a08c64;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #a08c70;">[LAYER_04]</span>
+                        <svg class="card-icon icon" style="color: #a08c70;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #a08c64;">04</div>
+                    <div class="card-number" style="color: #a08c70;">04</div>
                     <h3 class="card-h3">filtering_layer</h3>
                     <p class="card-p">// Signal Processing in the Information Age</p>
-                    <div class="card-divider" style="color: #a08c64;"></div>
-                </div>
+                    <div class="card-divider" style="color: #a08c70;"></div>
+                </a>
                 
-                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                <a href="#layer-5" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #8b9d8b;">[LAYER_05]</span>
-                        <svg class="card-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #8b8b7a;">[LAYER_05]</span>
+                        <svg class="card-icon icon" style="color: #8b8b7a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <line x1="12" y1="18" x2="12" y2="22"></line>
                             <line x1="12" y1="2" x2="12" y2="6"></line>
                             <line x1="4" y1="12" x2="2" y2="12"></line>
@@ -954,31 +1003,31 @@
                             <line x1="16" y1="18" x2="18.36" y2="20.36"></line>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #8b9d8b;">05</div>
+                    <div class="card-number" style="color: #8b8b7a;">05</div>
                     <h3 class="card-h3">integration_layer</h3>
                     <p class="card-p">// Systems Thinking as Practice</p>
-                    <div class="card-divider" style="color: #8b9d8b;"></div>
-                </div>
+                    <div class="card-divider" style="color: #8b8b7a;"></div>
+                </a>
                 
-                <div class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);">
+                <a href="#layer-6" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #5a6a5a;">[LAYER_06]</span>
-                        <svg class="card-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #6a7a60;">[LAYER_06]</span>
+                        <svg class="card-icon icon" style="color: #6a7a60;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M3 20h18"></path>
                             <path d="M21 10s-2-6-9-6-9 6-9 6"></path>
                             <path d="M12 4v6"></path>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #5a6a5a;">06</div>
+                    <div class="card-number" style="color: #6a7a60;">06</div>
                     <h3 class="card-h3">foundation_layer</h3>
                     <p class="card-p">// Land as the Original Ledger</p>
-                    <div class="card-divider" style="color: #5a6a5a;"></div>
-                </div>
+                    <div class="card-divider" style="color: #6a7a60;"></div>
+                </a>
                 
-                <div class="layer-card fade-in" style="box-shadow: 0 4px 20px rgba(90, 106, 90, 0.06);">
+                <a href="#layer-7" class="layer-card fade-in" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); text-decoration: none; display: block;">
                     <div class="card-header">
-                        <span class="card-tag" style="color: #6a7a6a;">[LAYER_07]</span>
-                        <svg class="card-icon icon" style="color: #6a7a6a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <span class="card-tag" style="color: #7a8a8b;">[LAYER_07]</span>
+                        <svg class="card-icon icon" style="color: #7a8a8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="3"></circle>
                             <circle cx="6" cy="6" r="2"></circle>
                             <circle cx="6" cy="18" r="2"></circle>
@@ -990,14 +1039,26 @@
                             <line x1="10.5" y1="13.5" x2="7.5" y2="16.5"></line>
                         </svg>
                     </div>
-                    <div class="card-number" style="color: #6a7a6a;">07</div>
+                    <div class="card-number" style="color: #7a8a8b;">07</div>
                     <h3 class="card-h3">coordination_layer</h3>
                     <p class="card-p">// Protocol as Philosophy</p>
-                    <div class="card-divider" style="color: #6a7a6a;"></div>
-                </div>
+                    <div class="card-divider" style="color: #7a8a8b;"></div>
+                </a>
             </div>
         </div>
     </section>
+
+    <!-- Major Section Divider -->
+    <div class="section-divider fade-in" style="color: #5a6a5a; padding: 5rem 0;">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m5.657-14.657l-4.243 4.243m0 5.828l4.243 4.243m-10.606 0l4.243-4.243m0-5.828L6.343 2.343"></path>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
 
     <!-- Layer 1 -->
     <section class="layer-section fade-in" id="layer-1">
@@ -1006,9 +1067,9 @@
                 <div class="layer-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80" alt="Energy as the First Protocol" class="layer-image">
                     <div class="layer-image-overlay"></div>
-                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 4px 20px rgba(122, 154, 122, 0.15);"></div>
+                    <div class="layer-image-border" style="color: rgba(122, 152, 112, 0.15); box-shadow: 0 4px 20px rgba(122, 154, 122, 0.15);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #5a6a5a;">
+                        <div class="layer-image-label-text" style="color: #7a9870;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1017,22 +1078,22 @@
                     </div>
                 </div>
                 
-                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
-                    <div class="layer-badge" style="background: rgba(74, 222, 128, 0.1); border-color: rgba(90, 106, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="layer-content-card" style="border-color: rgba(122, 152, 112, 0.12);">
+                    <div class="layer-badge" style="background: rgba(74, 222, 128, 0.1); border-color: rgba(122, 152, 112, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #7a9870;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C10.3431 2 9 3.34315 9 5C9 6.30622 9.83481 7.41746 11 7.82929V9.17071C9.83481 9.58254 9 10.6938 9 12C9 13.3062 9.83481 14.4175 11 14.8293V16.1707C9.83481 16.5825 9 17.6938 9 19C9 20.6569 10.3431 22 12 22C13.6569 22 15 20.6569 15 19C15 17.6938 14.1652 16.5825 13 16.1707V14.8293C14.1652 14.4175 15 13.3062 15 12C15 10.6938 14.1652 9.58254 13 9.17071V7.82929C14.1652 7.41746 15 6.30622 15 5C15 3.34315 13.6569 2 12 2Z"></path>
                         </svg>
-                        <span class="layer-badge-text" style="color: #5a6a5a;">[LAYER_01]</span>
+                        <span class="layer-badge-text" style="color: #7a9870;">[LAYER_01]</span>
                     </div>
                     
                     <h2 class="layer-h2">metabolic_layer</h2>
-                    <h3 class="layer-h3" style="color: #5a6a5a;">// Energy as the First Protocol</h3>
+                    <h3 class="layer-h3" style="color: #7a9870;">// Energy as the First Protocol</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             Sovereignty begins with metabolic autonomy. The body that can generate, store, and distribute its own energy is the first decentralized node. From photosynthesis to mitochondrial efficiency, this is the biological proof-of-work.
                         </p>
-                        <p class="layer-description" style="color: #5a6a5a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #7a9870; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Energy generation and storage as fundamental autonomy</li>
                             <li>Mitochondrial health as the cellular power grid</li>
@@ -1043,36 +1104,45 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #5a6a5a;"></div>
-                        <span class="layer-divider-text" style="color: #5a6a5a;">LAYER_01_END</span>
+                        <div class="layer-divider-line" style="color: #7a9870;"></div>
+                        <span class="layer-divider-text" style="color: #7a9870;">LAYER_01_END</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Layer 2 -->
     <section class="layer-section fade-in" id="layer-2">
         <div class="container">
             <div class="layer-grid">
-                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12); order: 2;" class="lg:order-1">
-                    <div class="layer-badge" style="background: rgba(34, 211, 238, 0.1); border-color: rgba(90, 106, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="layer-content-card" style="border-color: rgba(139, 157, 122, 0.12);">
+                    <div class="layer-badge" style="background: rgba(34, 211, 238, 0.1); border-color: rgba(139, 157, 122, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #8b9d7a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
                             <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
                             <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
                         </svg>
-                        <span class="layer-badge-text" style="color: #5a6a5a;">[LAYER_02]</span>
+                        <span class="layer-badge-text" style="color: #8b9d7a;">[LAYER_02]</span>
                     </div>
                     
                     <h2 class="layer-h2">biological_layer</h2>
-                    <h3 class="layer-h3" style="color: #5a6a5a;">// The Body as Infrastructure</h3>
+                    <h3 class="layer-h3" style="color: #8b9d7a;">// The Body as Infrastructure</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             Health is not a service to be consumed but a system to be maintained. This layer encompasses regenerative nutrition, movement protocols, and the microbiome as the original distributed network—a trillion entities working without central command.
                         </p>
-                        <p class="layer-description" style="color: #5a6a5a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #8b9d7a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Regenerative nutrition: food as biological information</li>
                             <li>Movement as mechanical signal for adaptation</li>
@@ -1083,17 +1153,17 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #5a6a5a;"></div>
-                        <span class="layer-divider-text" style="color: #5a6a5a;">LAYER_02_END</span>
+                        <div class="layer-divider-line" style="color: #8b9d7a;"></div>
+                        <span class="layer-divider-text" style="color: #8b9d7a;">LAYER_02_END</span>
                     </div>
                 </div>
                 
-                <div class="layer-image-wrapper" style="order: 1;" class="lg:order-2">
+                <div class="layer-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200&q=80" alt="The Body as Infrastructure" class="layer-image">
                     <div class="layer-image-overlay"></div>
-                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-border" style="color: rgba(139, 157, 122, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #5a6a5a;">
+                        <div class="layer-image-label-text" style="color: #8b9d7a;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1105,6 +1175,17 @@
         </div>
     </section>
 
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6"></path>
+            <circle cx="12" cy="2" r="1"></circle>
+            <circle cx="12" cy="22" r="1"></circle>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Layer 3 -->
     <section class="layer-section fade-in" id="layer-3">
         <div class="container">
@@ -1112,9 +1193,9 @@
                 <div class="layer-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1200&q=80" alt="Compute at the Edge" class="layer-image">
                     <div class="layer-image-overlay"></div>
-                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-border" style="color: rgba(122, 139, 139, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #8b9d8b;">
+                        <div class="layer-image-label-text" style="color: #7a8b8b;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1123,23 +1204,23 @@
                     </div>
                 </div>
                 
-                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
-                    <div class="layer-badge" style="background: rgba(167, 139, 250, 0.1); border-color: rgba(90, 106, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="layer-content-card" style="border-color: rgba(122, 139, 139, 0.12);">
+                    <div class="layer-badge" style="background: rgba(167, 139, 250, 0.1); border-color: rgba(122, 139, 139, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #7a8b8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M9.5 2A2.5 2.5 0 0 0 7 4.5v15A2.5 2.5 0 0 0 9.5 22h5a2.5 2.5 0 0 0 2.5-2.5v-15A2.5 2.5 0 0 0 14.5 2h-5z"></path>
                             <path d="M12 18h.01"></path>
                         </svg>
-                        <span class="layer-badge-text" style="color: #8b9d8b;">[LAYER_03]</span>
+                        <span class="layer-badge-text" style="color: #7a8b8b;">[LAYER_03]</span>
                     </div>
                     
                     <h2 class="layer-h2">cognitive_layer</h2>
-                    <h3 class="layer-h3" style="color: #8b9d8b;">// Compute at the Edge</h3>
+                    <h3 class="layer-h3" style="color: #7a8b8b;">// Compute at the Edge</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             The mind is the most sophisticated processor ever created. This layer trains attention, develops mental models, and builds pattern-recognition systems that operate independently of algorithmic suggestion. Thinking is the ultimate edge compute.
                         </p>
-                        <p class="layer-description" style="color: #8b9d8b; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #7a8b8b; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Attention as the scarcest resource in the information age</li>
                             <li>Mental models: frameworks for navigating complexity</li>
@@ -1150,34 +1231,42 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #8b9d8b;"></div>
-                        <span class="layer-divider-text" style="color: #8b9d8b;">LAYER_03_END</span>
+                        <div class="layer-divider-line" style="color: #7a8b8b;"></div>
+                        <span class="layer-divider-text" style="color: #7a8b8b;">LAYER_03_END</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Layer 4 -->
     <section class="layer-section fade-in" id="layer-4">
         <div class="container">
             <div class="layer-grid">
-                <div class="layer-content-card" style="border-color: rgba(120, 110, 90, 0.12); order: 2;" class="lg:order-1">
-                    <div class="layer-badge" style="background: rgba(251, 146, 60, 0.1); border-color: rgba(120, 110, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #a08c64;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="layer-content-card" style="border-color: rgba(160, 140, 112, 0.12);">
+                    <div class="layer-badge" style="background: rgba(251, 146, 60, 0.1); border-color: rgba(160, 140, 112, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #a08c70;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
                         </svg>
-                        <span class="layer-badge-text" style="color: #a08c64;">[LAYER_04]</span>
+                        <span class="layer-badge-text" style="color: #a08c70;">[LAYER_04]</span>
                     </div>
                     
                     <h2 class="layer-h2">filtering_layer</h2>
-                    <h3 class="layer-h3" style="color: #a08c64;">// Signal Processing in the Information Age</h3>
+                    <h3 class="layer-h3" style="color: #a08c70;">// Signal Processing in the Information Age</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             In an attention economy, the sovereign node curates its inputs with precision. This layer develops frameworks for information hygiene, noise reduction, and deliberate exposure. What enters the system determines what the system becomes.
                         </p>
-                        <p class="layer-description" style="color: #a08c64; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #a08c70; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Information diet: curating signal from noise</li>
                             <li>Digital minimalism and intentional consumption</li>
@@ -1188,17 +1277,17 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #a08c64;"></div>
-                        <span class="layer-divider-text" style="color: #a08c64;">LAYER_04_END</span>
+                        <div class="layer-divider-line" style="color: #a08c70;"></div>
+                        <span class="layer-divider-text" style="color: #a08c70;">LAYER_04_END</span>
                     </div>
                 </div>
                 
-                <div class="layer-image-wrapper" style="order: 1;" class="lg:order-2">
+                <div class="layer-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80" alt="Signal Processing" class="layer-image">
                     <div class="layer-image-overlay"></div>
-                    <div class="layer-image-border" style="color: rgba(120, 110, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
+                    <div class="layer-image-border" style="color: rgba(160, 140, 112, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #a08c64;">
+                        <div class="layer-image-label-text" style="color: #a08c70;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1210,6 +1299,16 @@
         </div>
     </section>
 
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <circle cx="12" cy="12" r="2"></circle>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Layer 5 -->
     <section class="layer-section fade-in" id="layer-5">
         <div class="container">
@@ -1219,7 +1318,7 @@
                     <div class="layer-image-overlay"></div>
                     <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #8b9d8b;">
+                        <div class="layer-image-label-text" style="color: #8b8b7a;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1230,7 +1329,7 @@
                 
                 <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
                     <div class="layer-badge" style="background: rgba(244, 114, 182, 0.1); border-color: rgba(90, 106, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #8b9d8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="layer-badge-icon icon" style="color: #8b8b7a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <line x1="12" y1="18" x2="12" y2="22"></line>
                             <line x1="12" y1="2" x2="12" y2="6"></line>
                             <line x1="4" y1="12" x2="2" y2="12"></line>
@@ -1240,17 +1339,17 @@
                             <line x1="8" y1="6" x2="5.64" y2="3.64"></line>
                             <line x1="16" y1="18" x2="18.36" y2="20.36"></line>
                         </svg>
-                        <span class="layer-badge-text" style="color: #8b9d8b;">[LAYER_05]</span>
+                        <span class="layer-badge-text" style="color: #8b8b7a;">[LAYER_05]</span>
                     </div>
                     
                     <h2 class="layer-h2">integration_layer</h2>
-                    <h3 class="layer-h3" style="color: #8b9d8b;">// Systems Thinking as Practice</h3>
+                    <h3 class="layer-h3" style="color: #8b8b7a;">// Systems Thinking as Practice</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             True sovereignty emerges when all layers operate in concert. This is the practice of seeing patterns across domains, recognizing feedback loops, and orchestrating complexity. The conductor moment—where the human synthesizes rather than consumes.
                         </p>
-                        <p class="layer-description" style="color: #8b9d8b; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #8b8b7a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Systems thinking: understanding interconnection</li>
                             <li>Feedback loops and second-order effects</li>
@@ -1261,36 +1360,46 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #8b9d8b;"></div>
-                        <span class="layer-divider-text" style="color: #8b9d8b;">LAYER_05_END</span>
+                        <div class="layer-divider-line" style="color: #8b8b7a;"></div>
+                        <span class="layer-divider-text" style="color: #8b8b7a;">LAYER_05_END</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M3 20h18"></path>
+            <path d="M21 10s-2-6-9-6-9 6-9 6"></path>
+            <path d="M12 4v6"></path>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Layer 6 -->
     <section class="layer-section fade-in" id="layer-6">
         <div class="container">
             <div class="layer-grid">
-                <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12); order: 2;" class="lg:order-1">
-                    <div class="layer-badge" style="background: rgba(132, 204, 22, 0.1); border-color: rgba(90, 106, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #5a6a5a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="layer-content-card" style="border-color: rgba(106, 122, 96, 0.12);">
+                    <div class="layer-badge" style="background: rgba(132, 204, 22, 0.1); border-color: rgba(106, 122, 96, 0.12);">
+                        <svg class="layer-badge-icon icon" style="color: #6a7a60;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M3 20h18"></path>
                             <path d="M21 10s-2-6-9-6-9 6-9 6"></path>
                             <path d="M12 4v6"></path>
                         </svg>
-                        <span class="layer-badge-text" style="color: #5a6a5a;">[LAYER_06]</span>
+                        <span class="layer-badge-text" style="color: #6a7a60;">[LAYER_06]</span>
                     </div>
                     
                     <h2 class="layer-h2">foundation_layer</h2>
-                    <h3 class="layer-h3" style="color: #5a6a5a;">// Land as the Original Ledger</h3>
+                    <h3 class="layer-h3" style="color: #6a7a60;">// Land as the Original Ledger</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             All digital sovereignty must be grounded in the physical. This layer reconnects the node to soil, water, and ecosystem. The land is the immutable ledger—no fork, no rollback, only the patient accumulation of biomass and time.
                         </p>
-                        <p class="layer-description" style="color: #5a6a5a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #6a7a60; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Land stewardship as long-term sovereignty</li>
                             <li>Regenerative agriculture and soil health</li>
@@ -1301,17 +1410,17 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #5a6a5a;"></div>
-                        <span class="layer-divider-text" style="color: #5a6a5a;">LAYER_06_END</span>
+                        <div class="layer-divider-line" style="color: #6a7a60;"></div>
+                        <span class="layer-divider-text" style="color: #6a7a60;">LAYER_06_END</span>
                     </div>
                 </div>
                 
-                <div class="layer-image-wrapper" style="order: 1;" class="lg:order-2">
+                <div class="layer-image-wrapper">
                     <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=80" alt="Land as Ledger" class="layer-image">
                     <div class="layer-image-overlay"></div>
-                    <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 4px 20px rgba(122, 154, 122, 0.15);"></div>
+                    <div class="layer-image-border" style="color: rgba(106, 122, 96, 0.15); box-shadow: 0 4px 20px rgba(122, 154, 122, 0.15);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #5a6a5a;">
+                        <div class="layer-image-label-text" style="color: #6a7a60;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1323,6 +1432,18 @@
         </div>
     </section>
 
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="6" cy="6" r="1.5"></circle>
+            <circle cx="6" cy="18" r="1.5"></circle>
+            <circle cx="18" cy="6" r="1.5"></circle>
+            <circle cx="18" cy="18" r="1.5"></circle>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
     <!-- Layer 7 -->
     <section class="layer-section fade-in" id="layer-7">
         <div class="container">
@@ -1332,7 +1453,7 @@
                     <div class="layer-image-overlay"></div>
                     <div class="layer-image-border" style="color: rgba(90, 106, 90, 0.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);"></div>
                     <div class="layer-image-label">
-                        <div class="layer-image-label-text" style="color: #6a7a6a;">
+                        <div class="layer-image-label-text" style="color: #7a8a8b;">
                             <svg class="icon" width="12" height="12" style="display: inline; margin-right: 0.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                             </svg>
@@ -1343,7 +1464,7 @@
                 
                 <div class="layer-content-card" style="border-color: rgba(90, 106, 90, 0.12);">
                     <div class="layer-badge" style="background: rgba(6, 182, 212, 0.1); border-color: rgba(90, 106, 90, 0.12);">
-                        <svg class="layer-badge-icon icon" style="color: #6a7a6a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="layer-badge-icon icon" style="color: #7a8a8b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="3"></circle>
                             <circle cx="6" cy="6" r="2"></circle>
                             <circle cx="6" cy="18" r="2"></circle>
@@ -1354,17 +1475,17 @@
                             <line x1="10.5" y1="10.5" x2="7.5" y2="7.5"></line>
                             <line x1="10.5" y1="13.5" x2="7.5" y2="16.5"></line>
                         </svg>
-                        <span class="layer-badge-text" style="color: #6a7a6a;">[LAYER_07]</span>
+                        <span class="layer-badge-text" style="color: #7a8a8b;">[LAYER_07]</span>
                     </div>
                     
                     <h2 class="layer-h2">coordination_layer</h2>
-                    <h3 class="layer-h3" style="color: #6a7a6a;">// Protocol as Philosophy</h3>
+                    <h3 class="layer-h3" style="color: #7a8a8b;">// Protocol as Philosophy</h3>
                     
                     <div class="layer-description-box">
                         <p class="layer-description" style="margin-bottom: 1.5rem;">
                             The final layer establishes how sovereign nodes communicate, transact, and collaborate. Not through coercion or dependency, but through voluntary protocol. This is the architecture of a networked sovereignty—independent yet interconnected.
                         </p>
-                        <p class="layer-description" style="color: #6a7a6a; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
+                        <p class="layer-description" style="color: #7a8a8b; font-weight: 600; margin-bottom: 0.75rem;">Key Principles:</p>
                         <ul class="layer-description" style="margin-left: 1.5rem; line-height: 2;">
                             <li>Voluntary coordination over hierarchical control</li>
                             <li>Protocol design: rules without rulers</li>
@@ -1375,13 +1496,103 @@
                     </div>
                     
                     <div class="layer-divider">
-                        <div class="layer-divider-line" style="color: #6a7a6a;"></div>
-                        <span class="layer-divider-text" style="color: #6a7a6a;">LAYER_07_END</span>
+                        <div class="layer-divider-line" style="color: #7a8a8b;"></div>
+                        <span class="layer-divider-text" style="color: #7a8a8b;">LAYER_07_END</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Major Section Divider -->
+    <div class="section-divider fade-in" style="color: #5a6a5a; padding: 5rem 0;">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <line x1="12" y1="2" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="12" cy="2" r="1"></circle>
+            <circle cx="12" cy="22" r="1"></circle>
+            <circle cx="2" cy="12" r="1"></circle>
+            <circle cx="22" cy="12" r="1"></circle>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
+
+    <!-- Synthesis Section -->
+    <section class="framework-section" style="padding-top: 6rem; padding-bottom: 6rem;">
+        <div class="container">
+            <div class="framework-terminal fade-in">
+                <div class="framework-dots">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div class="framework-path">~/synthesis.md</div>
+                
+                <h2 class="framework-h2" style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 2rem; text-align: center;">
+                    <span class="keyword">The</span> <span class="classname">Emergent_Whole</span>
+                </h2>
+                
+                <div style="max-width: 56rem; margin: 0 auto; space-y: 2rem;">
+                    <div style="backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.4); border-radius: 0.5rem; padding: 2rem; border: 1px solid rgba(74, 90, 74, 0.08); margin-bottom: 1.5rem;">
+                        <p class="framework-p" style="max-width: none; padding-left: 0; text-align: left; font-size: clamp(1.125rem, 2.5vw, 1.375rem); line-height: 1.9; color: #4a5a4a;">
+                            <span class="comment">/*</span> When all seven layers align, something remarkable emerges: 
+                            <strong style="color: #3a4a3a;">not a rigid system, but a living metabolism</strong>. 
+                            Each layer feeds the next, creating feedback loops that amplify sovereignty rather than fragment it. <span class="comment">*/</span>
+                        </p>
+                    </div>
+
+                    <div style="backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.4); border-radius: 0.5rem; padding: 2rem; border: 1px solid rgba(74, 90, 74, 0.08); margin-bottom: 1.5rem;">
+                        <p class="framework-p" style="max-width: none; padding-left: 0; text-align: left; font-size: clamp(1rem, 2vw, 1.125rem); line-height: 1.8; color: #4a5a4a; margin-bottom: 1.5rem;">
+                            The <strong style="color: #7a9870;">metabolic layer</strong> generates energy that powers the <strong style="color: #8b9d7a;">biological layer</strong>, 
+                            which creates the foundation for the <strong style="color: #7a8b8b;">cognitive layer</strong> to operate at its peak. 
+                            Clear thinking enables the <strong style="color: #a08c70;">filtering layer</strong> to discern signal from noise, 
+                            which provides the clean inputs necessary for the <strong style="color: #8b8b7a;">integration layer</strong> to synthesize patterns.
+                        </p>
+                        <p class="framework-p" style="max-width: none; padding-left: 0; text-align: left; font-size: clamp(1rem, 2vw, 1.125rem); line-height: 1.8; color: #4a5a4a;">
+                            This synthesis is grounded in the <strong style="color: #6a7a60;">foundation layer</strong>—the land itself—
+                            which provides both literal and metaphorical stability. Finally, the <strong style="color: #7a8a8b;">coordination layer</strong> 
+                            allows the sovereign node to interface with other nodes, creating networks of mutual support without sacrificing autonomy.
+                        </p>
+                    </div>
+
+                    <div style="backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.4); border-radius: 0.5rem; padding: 2rem; border: 1px solid rgba(74, 90, 74, 0.08); margin-bottom: 1.5rem;">
+                        <p class="framework-p" style="max-width: none; padding-left: 0; text-align: left; font-size: clamp(1.125rem, 2.5vw, 1.375rem); line-height: 1.9; color: #4a5a4a;">
+                            <span class="comment">//</span> This is not about perfection. It's about <em style="color: #3a4a3a;">coherence</em>. 
+                            A node doesn't need all layers operating at 100% simultaneously. 
+                            It needs them <strong style="color: #3a4a3a;">in conversation with each other</strong>, 
+                            creating a resilient system that can adapt, learn, and evolve.
+                        </p>
+                    </div>
+
+                    <div style="backdrop-filter: blur(5px); background: rgba(255, 255, 255, 0.5); border-radius: 0.5rem; padding: 2.5rem; border: 1px solid rgba(74, 90, 74, 0.12); margin-top: 2rem; text-align: center;">
+                        <p class="framework-p" style="max-width: none; padding-left: 0; font-size: clamp(1.25rem, 3vw, 1.75rem); line-height: 1.7; color: #3a4a3a; font-weight: 600; margin-bottom: 1rem;">
+                            The goal is not independence from the world,<br/>
+                            but <span style="color: #5a6a5a;">freedom to engage with it on your own terms</span>.
+                        </p>
+                        <p class="framework-p" style="max-width: none; padding-left: 0; font-size: clamp(1rem, 2vw, 1.25rem); line-height: 1.8; color: #5a6a5a; opacity: 0.8; margin-top: 1rem;">
+                            <span class="comment">// This is radiant autonomy: sovereignty that glows outward, 
+                            illuminating possibilities rather than isolating from them.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Major Section Divider -->
+    <div class="section-divider fade-in" style="color: #5a6a5a; padding: 5rem 0;">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C10.3431 2 9 3.34315 9 5C9 6.30622 9.83481 7.41746 11 7.82929V9.17071C9.83481 9.58254 9 10.6938 9 12C9 13.3062 9.83481 14.4175 11 14.8293V16.1707C9.83481 16.5825 9 17.6938 9 19C9 20.6569 10.3431 22 12 22C13.6569 22 15 20.6569 15 19C15 17.6938 14.1652 16.5825 13 16.1707V14.8293C14.1652 14.4175 15 13.3062 15 12C15 10.6938 14.1652 9.58254 13 9.17071V7.82929C14.1652 7.41746 15 6.30622 15 5C15 3.34315 13.6569 2 12 2Z"></path>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
 
     <!-- Author Section -->
     <section class="framework-section" style="padding-top: 3rem; padding-bottom: 3rem;">
@@ -1395,7 +1606,7 @@
                 <div class="framework-path">~/author_info.txt</div>
                 
                 <h2 class="framework-h2" style="font-size: clamp(1.875rem, 4vw, 2.5rem); margin-bottom: 1rem;">
-                    <span class="keyword">connect_with</span> <span class="classname">Tabris Chen</span>
+                    <span class="keyword">connect_with</span> <span class="classname">the_author</span>
                 </h2>
                 
                 <p class="framework-p" style="max-width: 42rem; margin: 0 auto 2rem; padding-left: 0;">
@@ -1439,6 +1650,18 @@
             </div>
         </div>
     </section>
+
+    <!-- Major Section Divider -->
+    <div class="section-divider fade-in" style="color: #5a6a5a; padding: 5rem 0;">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-dot"></div>
+        <svg class="section-divider-icon" style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 6v6l4 2"></path>
+        </svg>
+        <div class="section-divider-dot"></div>
+        <div class="section-divider-line"></div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
